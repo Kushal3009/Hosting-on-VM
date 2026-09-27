@@ -1,3 +1,4 @@
+```yaml
 name: Deploy to OCI VM
 
 on:
@@ -21,7 +22,7 @@ jobs:
             mkdir -p ~/app
             cd ~/app
 
-            # Clone repo if first run, otherwise pull latest code
+            # Clone repo on first run, otherwise pull latest code
             if [ ! -d ".git" ]; then
               git clone https://github.com/${{ github.repository }}.git .
             else
@@ -29,9 +30,9 @@ jobs:
               git reset --hard origin/main
             fi
 
-            # Build and start services
-            docker compose down
-            docker compose up --build -d
+            # Start Docker Compose services
+            docker compose up -d
 
-            # Clean unused images to save VM disk space
+            # Clean unused Docker images to save VM disk space
             docker image prune -f
+```

@@ -7,8 +7,8 @@ services:
       POSTGRES_USER: ${DB_USER:-postgres}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
       POSTGRES_DB: ${DB_NAME:-crud_db}
-    expose:
-      - "5432"
+    ports:
+      - "${DB_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -16,28 +16,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    networks:
-      - app_network
-
-  api:
-    build: .
-    container_name: backend_app
-    restart: always
-    ports:
-      - "5000:5000"
-    environment:
-      - PORT=5000
-      - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-crud_db}
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - app_network
 
 volumes:
   pgdata:
     driver: local
-
-networks:
-  app_network:
-    driver: bridge
